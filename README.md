@@ -20,7 +20,8 @@
 </p>
 
 <p align="center">
-  <b>🎉 Live Demo: <a href="https://foodbridge-hackathon.vercel.app/">https://foodbridge-hackathon.vercel.app/</a> 🎉</b>
+  <b>🎉 Live Demo: <a href="https://foodbridge-hackathon.vercel.app/">https://foodbridge-hackathon.vercel.app/</a> 🎉</b><br/>
+  <b>📹 Video Submission: <a href="https://drive.google.com/file/d/1QEDU_5qXHfGxl_YGIp1LcwpC_P6iEDfR/view?usp=sharing">Watch Here</a> 📹</b>
 </p>
 
 ---

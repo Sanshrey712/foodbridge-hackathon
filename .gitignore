@@ -47,3 +47,8 @@ backend/foodbridge.db
 
 # ML model binaries are committed intentionally so Render doesn't retrain on cold start
 # ml/models/*.pkl  <-- keep these tracked
+
+# Large video files
+*.mov
+*.mp4
+"video submission.mov"
