@@ -100,11 +100,11 @@ export default function LoginPage() {
       addToast(`Welcome, ${res.data.name}! 🌿`, 'success')
       navigate(selectedRole === 'donor' ? '/donor' : '/recipient')
     } catch (err) {
-      // If user already registered with this email, just log them in
+      // If user already registered with this email, just log them in via Google endpoint
       try {
-        const loginRes = await authAPI.login({
+        const loginRes = await authAPI.loginWithGoogle({
           email: pendingGoogleUser.email,
-          password: `google_oauth_${pendingGoogleUser.token?.slice(-16) || ''}`,
+          name: pendingGoogleUser.name,
         })
         login(loginRes.data)
         addToast(`Welcome back, ${loginRes.data.name}! 🌿`, 'success')
