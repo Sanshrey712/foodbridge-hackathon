@@ -1,0 +1,530 @@
+
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Inter',system-ui,sans-serif;}
+  :root{
+    --green:#2D6A4F;--green-light:#E8F5E9;--green-mid:#52B788;
+    --amber:#F4A261;--amber-light:#FEF3E2;
+    --bg:#F8F7F4;--surface:#FFFFFF;--surface-alt:#F0EEE9;
+    --text:#1A1A2E;--text-muted:#6B7280;--text-hint:#9CA3AF;
+    --border:#E5E0D8;--border-soft:#F0EEE9;
+    --navy:#1A1A2E;
+  }
+  .tabs{display:flex;gap:0;border-bottom:1px solid var(--border);background:var(--surface);padding:0 24px;position:sticky;top:0;z-index:100;}
+  .tab{padding:14px 20px;font-size:13px;font-weight:500;color:var(--text-muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;}
+  .tab.active{color:var(--green);border-bottom-color:var(--green);}
+  .screen{display:none;background:var(--bg);min-height:600px;}
+  .screen.active{display:block;}
+
+  /* NAVBAR */
+  .navbar{display:flex;align-items:center;background:var(--surface);border-bottom:1px solid var(--border);padding:0 32px;height:56px;gap:40px;}
+  .navbar-brand{font-size:16px;font-weight:700;color:var(--green);display:flex;align-items:center;gap:8px;margin-right:24px;}
+  .navbar-brand span{font-size:18px;}
+  .nav-link{font-size:13px;color:var(--text-muted);cursor:pointer;padding:4px 0;border-bottom:2px solid transparent;}
+  .nav-link.active{color:var(--green);border-bottom-color:var(--green);font-weight:500;}
+  .nav-right{margin-left:auto;display:flex;align-items:center;gap:12px;}
+  .avatar{width:32px;height:32px;border-radius:50%;background:var(--green-light);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:var(--green);}
+
+  /* CARDS */
+  .card{background:var(--surface);border:1px solid var(--border-soft);border-radius:14px;padding:20px;}
+  .card-sm{background:var(--surface);border:1px solid var(--border-soft);border-radius:12px;padding:16px;}
+
+  /* BADGE */
+  .badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;}
+  .badge-green{background:var(--green-light);color:var(--green);}
+  .badge-amber{background:var(--amber-light);color:#B45309;}
+  .badge-blue{background:#E0F2FE;color:#0369A1;}
+  .badge-purple{background:#EDE9FE;color:#6D28D9;}
+  .badge-gray{background:var(--surface-alt);color:var(--text-muted);}
+
+  /* BUTTONS */
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 20px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .15s;}
+  .btn-primary{background:var(--green);color:#fff;}
+  .btn-primary:hover{background:#235A40;}
+  .btn-outline{background:var(--green-light);color:var(--green);border:1px solid #B7DFC8;}
+  .btn-ghost{background:var(--surface-alt);color:var(--text);}
+  .btn-sm{padding:7px 14px;font-size:12px;}
+
+  /* INPUTS */
+  .input-group{display:flex;flex-direction:column;gap:6px;}
+  .input-label{font-size:12px;font-weight:500;color:#374151;}
+  .input{padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:13px;color:var(--text);background:var(--bg);outline:none;transition:border .15s;}
+  .input:focus{border-color:var(--green);background:var(--surface);}
+  .input::placeholder{color:var(--text-hint);}
+
+  /* SCORE BAR */
+  .score-bar{height:4px;background:var(--border-soft);border-radius:2px;overflow:hidden;}
+  .score-fill{height:100%;background:var(--green);border-radius:2px;}
+
+  /* STAT CARD */
+  .stat-card{background:var(--surface);border:1px solid var(--border-soft);border-radius:14px;padding:18px 20px;}
+  .stat-val{font-size:24px;font-weight:700;margin-bottom:2px;}
+  .stat-label{font-size:12px;font-weight:500;color:#374151;}
+  .stat-sub{font-size:11px;color:var(--text-hint);margin-top:2px;}
+
+  /* CHIP ROW */
+  .chip{display:inline-block;padding:5px 14px;border-radius:20px;font-size:12px;cursor:pointer;border:1.5px solid transparent;}
+  .chip.active{background:var(--green-light);border-color:#B7DFC8;color:var(--green);font-weight:600;}
+  .chip:not(.active){background:var(--surface-alt);color:var(--text-muted);}
+
+  /* LISTING CARD */
+  .listing-card{background:var(--surface);border:1px solid var(--border-soft);border-radius:14px;padding:16px;transition:all .15s;cursor:pointer;}
+  .listing-card:hover{border-color:#B7DFC8;transform:translateY(-1px);}
+
+  /* TABLE */
+  .tbl{width:100%;border-collapse:collapse;}
+  .tbl th{font-size:11px;font-weight:600;color:var(--text-hint);text-transform:uppercase;letter-spacing:.5px;padding:10px 12px;text-align:left;background:var(--bg);}
+  .tbl td{font-size:13px;padding:12px 12px;border-top:1px solid var(--border-soft);color:var(--text);}
+  .tbl tr:hover td{background:#FAFAF8;}
+
+  /* FORECAST CHART (CSS bars) */
+  .chart-bar{display:flex;align-items:flex-end;gap:6px;height:160px;padding:0 8px;}
+  .bar-col{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;}
+  .bar{width:100%;border-radius:4px 4px 0 0;min-height:4px;transition:height .3s;}
+  .bar-label{font-size:10px;color:var(--text-hint);white-space:nowrap;}
+  .bar-val{font-size:10px;font-weight:500;color:var(--text-muted);}
+
+  /* MAP MOCKUP */
+  .map-grid{display:grid;grid-template-columns:1fr;background:#E4EDF2;border-radius:12px;position:relative;overflow:hidden;height:400px;}
+  .map-road-h{position:absolute;left:0;right:0;height:2px;background:#D0DBE0;}
+  .map-road-v{position:absolute;top:0;bottom:0;width:2px;background:#D0DBE0;}
+  .map-pin{position:absolute;display:flex;flex-direction:column;align-items:center;cursor:pointer;}
+  .pin-body{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 2px 8px rgba(0,0,0,.15);}
+  .pin-dot{width:8px;height:8px;border-radius:50%;margin-top:-2px;}
+  .map-popup{position:absolute;background:var(--surface);border-radius:12px;padding:14px;width:200px;border:1px solid var(--border-soft);box-shadow:0 4px 20px rgba(0,0,0,.08);}
+  .popup-accent{position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--green);border-radius:12px 0 0 12px;}
+
+  .section-title{font-size:10px;font-weight:600;color:var(--text-hint);letter-spacing:.5px;text-transform:uppercase;margin-bottom:12px;}
+</style>
+
+<div>
+  <div class="tabs" id="tabs">
+    <div class="tab active" onclick="showScreen(0)">Login / Register</div>
+    <div class="tab" onclick="showScreen(1)">Map View</div>
+    <div class="tab" onclick="showScreen(2)">Recipient View</div>
+    <div class="tab" onclick="showScreen(3)">Donor Dashboard</div>
+    <div class="tab" onclick="showScreen(4)">Forecast Chart</div>
+  </div>
+
+  <!-- SCREEN 1: LOGIN -->
+  <div class="screen active" id="s0">
+    <div style="display:grid;grid-template-columns:400px 1fr;min-height:600px;">
+      <div style="background:var(--green);padding:48px;display:flex;flex-direction:column;justify-content:space-between;">
+        <div>
+          <div style="font-size:20px;font-weight:700;color:#fff;margin-bottom:48px;">FoodBridge</div>
+          <div style="font-size:40px;font-weight:700;color:#fff;line-height:1.2;margin-bottom:20px;">Connecting<br>Surplus Food<br>to Those<br>Who Need It.</div>
+          <div style="font-size:14px;color:#A7F3D0;line-height:1.6;">AI-powered food redistribution across Chennai — reducing waste, fighting hunger.</div>
+        </div>
+        <div style="display:flex;gap:32px;">
+          <div><div style="font-size:24px;font-weight:700;color:#fff;">84+</div><div style="font-size:11px;color:#A7F3D0;margin-top:2px;">NGO Partners</div></div>
+          <div><div style="font-size:24px;font-weight:700;color:#fff;">150+</div><div style="font-size:11px;color:#A7F3D0;margin-top:2px;">Daily Listings</div></div>
+          <div><div style="font-size:24px;font-weight:700;color:#fff;">0 kg</div><div style="font-size:11px;color:#A7F3D0;margin-top:2px;">Wasted Today</div></div>
+        </div>
+      </div>
+      <div style="background:var(--surface);padding:48px;display:flex;flex-direction:column;justify-content:center;max-width:480px;margin:0 auto;width:100%;">
+        <div style="display:flex;background:var(--surface-alt);border-radius:24px;padding:4px;margin-bottom:32px;width:fit-content;">
+          <div id="tab-signin" onclick="toggleAuthTab(0)" style="padding:8px 24px;border-radius:20px;background:var(--green);color:#fff;font-size:13px;font-weight:600;cursor:pointer;">Sign In</div>
+          <div id="tab-register" onclick="toggleAuthTab(1)" style="padding:8px 24px;border-radius:20px;font-size:13px;font-weight:500;color:var(--text-muted);cursor:pointer;">Register</div>
+        </div>
+        <div style="font-size:26px;font-weight:700;color:var(--text);margin-bottom:6px;">Welcome back</div>
+        <div style="font-size:14px;color:var(--text-muted);margin-bottom:28px;">Sign in to your FoodBridge account</div>
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <div class="input-group"><label class="input-label">Email address</label><input class="input" placeholder="you@example.com" type="email"></div>
+          <div class="input-group"><label class="input-label">Password</label><input class="input" placeholder="••••••••" type="password"></div>
+          <div id="role-section">
+            <div class="input-label" style="margin-bottom:8px;">I am a...</div>
+            <div style="display:flex;gap:10px;">
+              <div id="role-donor" onclick="selectRole('donor')" style="flex:1;padding:10px;border-radius:10px;border:1.5px solid var(--green);background:var(--green-light);text-align:center;font-size:13px;font-weight:600;color:var(--green);cursor:pointer;">Food Donor</div>
+              <div id="role-recipient" onclick="selectRole('recipient')" style="flex:1;padding:10px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface-alt);text-align:center;font-size:13px;color:var(--text-muted);cursor:pointer;">Recipient / NGO</div>
+            </div>
+          </div>
+          <button class="btn btn-primary" style="width:100%;margin-top:4px;padding:13px;">Sign In to FoodBridge</button>
+          <div style="text-align:center;font-size:13px;color:var(--green);cursor:pointer;">Don't have an account? Register free</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 2: MAP -->
+  <div class="screen" id="s1">
+    <div class="navbar">
+      <div class="navbar-brand"><span style="font-size:18px;">🌿</span>FoodBridge</div>
+      <div class="nav-link active">Map</div>
+      <div class="nav-link">Listings</div>
+      <div class="nav-link">Forecast</div>
+      <div class="nav-link">My Claims</div>
+      <div class="nav-right"><div style="font-size:13px;color:var(--text-muted);">Test Donor</div><div class="avatar">T</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:300px 1fr;height:calc(600px - 56px);">
+      <div style="background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:20px;">
+        <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:4px;">Nearby Listings</div>
+        <div style="font-size:12px;color:var(--text-hint);margin-bottom:14px;">12 active within 10 km</div>
+        <input class="input" placeholder="Search food..." style="width:100%;margin-bottom:14px;">
+        <div class="section-title">Category</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;">
+          <span class="chip active">All</span>
+          <span class="chip">Cooked</span>
+          <span class="chip">Bakery</span>
+          <span class="chip">Raw</span>
+          <span class="chip">Dairy</span>
+        </div>
+        <div class="section-title">Top Matches</div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div class="listing-card" onclick="showPopup('rice')">
+            <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px;">
+              <span class="badge badge-green">cooked</span>
+              <span class="badge badge-green" style="font-size:11px;">95%</span>
+            </div>
+            <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:2px;">Rice & Sambar</div>
+            <div style="font-size:11px;color:var(--text-hint);margin-bottom:8px;">Kapaleeshwarar Temple</div>
+            <div style="display:flex;gap:12px;font-size:11px;color:var(--text-muted);margin-bottom:8px;">
+              <span>0.8 km</span><span style="color:var(--amber);">3h left</span><span>12 kg</span>
+            </div>
+            <div class="score-bar"><div class="score-fill" style="width:95%;"></div></div>
+            <button class="btn btn-primary btn-sm" style="width:100%;margin-top:10px;">Claim this listing</button>
+          </div>
+          <div class="listing-card">
+            <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px;">
+              <span class="badge badge-green">cooked</span>
+              <span class="badge badge-green">92%</span>
+            </div>
+            <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:2px;">Biryani</div>
+            <div style="font-size:11px;color:var(--text-hint);margin-bottom:8px;">Hotel Crown Palace</div>
+            <div style="display:flex;gap:12px;font-size:11px;color:var(--text-muted);margin-bottom:8px;">
+              <span>2.1 km</span><span style="color:var(--amber);">2h left</span><span>25 kg</span>
+            </div>
+            <div class="score-bar"><div class="score-fill" style="width:92%;"></div></div>
+            <button class="btn btn-primary btn-sm" style="width:100%;margin-top:10px;">Claim this listing</button>
+          </div>
+        </div>
+      </div>
+      <div style="position:relative;background:#E4EDF2;overflow:hidden;">
+        <div class="map-road-h" style="top:33%;"></div>
+        <div class="map-road-h" style="top:66%;"></div>
+        <div class="map-road-v" style="left:33%;"></div>
+        <div class="map-road-v" style="left:66%;"></div>
+        <div class="map-pin" style="left:18%;top:22%;" onclick="showPopup('rice')">
+          <div class="pin-body" style="background:var(--green);color:#fff;">🍛</div>
+          <div class="pin-dot" style="background:var(--green);"></div>
+        </div>
+        <div class="map-pin" style="left:42%;top:38%;">
+          <div class="pin-body" style="background:#F4A261;color:#fff;">🍞</div>
+          <div class="pin-dot" style="background:#F4A261;"></div>
+        </div>
+        <div class="map-pin" style="left:65%;top:18%;">
+          <div class="pin-body" style="background:var(--green);color:#fff;">🍛</div>
+          <div class="pin-dot" style="background:var(--green);"></div>
+        </div>
+        <div class="map-pin" style="left:55%;top:55%;">
+          <div class="pin-body" style="background:#6366F1;color:#fff;">📦</div>
+          <div class="pin-dot" style="background:#6366F1;"></div>
+        </div>
+        <div class="map-pin" style="left:78%;top:42%;">
+          <div class="pin-body" style="background:#0EA5E9;color:#fff;">🥛</div>
+          <div class="pin-dot" style="background:#0EA5E9;"></div>
+        </div>
+        <div class="map-pin" style="left:15%;top:62%;">
+          <div class="pin-body" style="background:#10B981;color:#fff;">🥕</div>
+          <div class="pin-dot" style="background:#10B981;"></div>
+        </div>
+        <div class="map-popup" id="map-popup" style="left:20%;top:8%;display:block;">
+          <div class="popup-accent"></div>
+          <div style="padding-left:10px;">
+            <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px;">Rice & Sambar</div>
+            <div style="font-size:11px;color:var(--text-hint);margin-bottom:4px;">12 kg available</div>
+            <div style="font-size:11px;color:var(--amber);margin-bottom:4px;">3 hours left</div>
+            <div style="font-size:11px;color:var(--green);margin-bottom:10px;">0.8 km · Match: 95%</div>
+            <div style="display:flex;gap:8px;">
+              <button class="btn btn-primary btn-sm">Claim</button>
+              <button class="btn btn-ghost btn-sm">Details</button>
+            </div>
+          </div>
+        </div>
+        <div style="position:absolute;top:12px;right:12px;background:var(--surface);border-radius:10px;padding:10px 14px;border:1px solid var(--border);">
+          <div style="font-size:11px;color:var(--text-hint);margin-bottom:6px;">Legend</div>
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-muted);"><div style="width:12px;height:12px;border-radius:50%;background:var(--green);font-size:8px;display:flex;align-items:center;justify-content:center;color:#fff;">🍛</div>Cooked</div>
+            <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-muted);"><div style="width:12px;height:12px;border-radius:50%;background:#F4A261;"></div>Bakery</div>
+            <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-muted);"><div style="width:12px;height:12px;border-radius:50%;background:#0EA5E9;"></div>Dairy</div>
+            <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-muted);"><div style="width:12px;height:12px;border-radius:50%;background:#6366F1;"></div>Packaged</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 3: RECIPIENT VIEW -->
+  <div class="screen" id="s2">
+    <div class="navbar">
+      <div class="navbar-brand"><span style="font-size:18px;">🌿</span>FoodBridge</div>
+      <div class="nav-link">Map</div>
+      <div class="nav-link active">Listings</div>
+      <div class="nav-link">Forecast</div>
+      <div class="nav-link">My Claims</div>
+      <div class="nav-right"><div class="avatar">N</div></div>
+    </div>
+    <div style="padding:28px;max-width:1100px;margin:0 auto;">
+      <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:6px;">
+        <div style="font-size:22px;font-weight:700;color:var(--text);">ML-Matched Listings</div>
+        <div style="font-size:12px;color:var(--text-hint);">Ranked by our AI · updated 2 min ago</div>
+      </div>
+      <div style="font-size:14px;color:var(--text-muted);margin-bottom:20px;">Top food donations near your location, scored by urgency, distance and your preferences.</div>
+      <div style="display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap;">
+        <span class="chip active">All Categories</span>
+        <span class="chip">Cooked</span>
+        <span class="chip">Bakery</span>
+        <span class="chip">Raw</span>
+        <span class="chip">Dairy</span>
+        <span class="chip">Packaged</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+        ${[
+          {rank:1,title:'Rice & Sambar',org:'Kapaleeshwarar Temple',cat:'cooked',qty:'12 kg',dist:'0.8 km',exp:'3h',score:95,urgent:true},
+          {rank:2,title:'Biryani',org:'Hotel Crown Palace',cat:'cooked',qty:'25 kg',dist:'2.1 km',exp:'2h',score:92,urgent:true},
+          {rank:3,title:'Pongal & Chutney',org:'Parthasarathy Temple',cat:'cooked',qty:'18 kg',dist:'1.5 km',exp:'4h',score:89,urgent:false},
+          {rank:4,title:'Bread & Rolls',org:'Tambaram Bakery',cat:'bakery',qty:'5 kg',dist:'1.2 km',exp:'5h',score:88,urgent:false},
+          {rank:5,title:'Milk Packets',org:'Aavin Depot',cat:'dairy',qty:'15 kg',dist:'3.2 km',exp:'14h',score:76,urgent:false},
+          {rank:6,title:'Mixed Vegetables',org:'Koyambedu Market',cat:'raw',qty:'20 kg',dist:'4.1 km',exp:'20h',score:71,urgent:false},
+        ].map(l=>`
+          <div class="listing-card" style="position:relative;${l.urgent?'border-color:#B7DFC8;':''}">
+            ${l.urgent?`<div style="position:absolute;top:-1px;right:12px;background:var(--amber);color:#fff;font-size:10px;font-weight:700;padding:3px 10px;border-radius:0 0 8px 8px;">EXPIRING SOON</div>`:''}
+            <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:10px;">
+              <span class="badge ${l.cat==='cooked'?'badge-green':l.cat==='bakery'?'badge-amber':l.cat==='dairy'?'badge-blue':'badge-gray'}">${l.cat}</span>
+              <div style="display:flex;align-items:center;gap:4px;">
+                <div style="width:28px;height:28px;border-radius:50%;background:var(--green-light);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--green);">${l.score}</div>
+              </div>
+            </div>
+            <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:3px;">${l.title}</div>
+            <div style="font-size:12px;color:var(--text-hint);margin-bottom:12px;">${l.org}</div>
+            <div style="display:flex;gap:0;margin-bottom:10px;background:var(--bg);border-radius:8px;padding:8px;gap:8px;">
+              <div style="flex:1;text-align:center;"><div style="font-size:12px;font-weight:600;color:var(--text);">${l.qty}</div><div style="font-size:10px;color:var(--text-hint);">quantity</div></div>
+              <div style="width:1px;background:var(--border);"></div>
+              <div style="flex:1;text-align:center;"><div style="font-size:12px;font-weight:600;color:var(--text);">${l.dist}</div><div style="font-size:10px;color:var(--text-hint);">away</div></div>
+              <div style="width:1px;background:var(--border);"></div>
+              <div style="flex:1;text-align:center;"><div style="font-size:12px;font-weight:600;color:${l.urgent?'var(--amber)':'var(--text)'};">${l.exp}</div><div style="font-size:10px;color:var(--text-hint);">left</div></div>
+            </div>
+            <div style="margin-bottom:10px;">
+              <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-hint);margin-bottom:4px;"><span>Match score</span><span style="font-weight:600;color:var(--green);">${l.score}%</span></div>
+              <div class="score-bar"><div class="score-fill" style="width:${l.score}%;"></div></div>
+            </div>
+            <button class="btn btn-primary" style="width:100%;font-size:12px;padding:9px;">Claim This Listing</button>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 4: DONOR DASHBOARD -->
+  <div class="screen" id="s3">
+    <div class="navbar">
+      <div class="navbar-brand"><span style="font-size:18px;">🌿</span>FoodBridge</div>
+      <div class="nav-link">Map</div>
+      <div class="nav-link">Listings</div>
+      <div class="nav-link">Forecast</div>
+      <div class="nav-link active">Dashboard</div>
+      <div class="nav-right"><button class="btn btn-primary btn-sm">+ Post Listing</button><div class="avatar">T</div></div>
+    </div>
+    <div style="padding:24px;max-width:1100px;margin:0 auto;">
+      <div style="font-size:22px;font-weight:700;color:var(--text);margin-bottom:4px;">Donor Dashboard</div>
+      <div style="font-size:14px;color:var(--text-muted);margin-bottom:20px;">Manage your food surplus listings and track your impact.</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px;">
+        ${[
+          {val:'23',label:'Total Listings',sub:'All time',color:'var(--green)'},
+          {val:'412 kg',label:'Total Donated',sub:'Across all time',color:'#0369A1'},
+          {val:'18',label:'Claimed',sub:'Successfully',color:'#B45309'},
+          {val:'94%',label:'Pickup Rate',sub:'Above city avg',color:'#059669'},
+        ].map(s=>`
+          <div class="stat-card">
+            <div class="stat-val" style="color:${s.color};">${s.val}</div>
+            <div class="stat-label">${s.label}</div>
+            <div class="stat-sub">${s.sub}</div>
+          </div>
+        `).join('')}
+      </div>
+      <div style="display:grid;grid-template-columns:380px 1fr;gap:16px;">
+        <div class="card">
+          <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:4px;">Post New Listing</div>
+          <div style="font-size:12px;color:var(--text-hint);margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--border-soft);">Share your surplus food with nearby recipients</div>
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <div class="input-group"><label class="input-label">Food Title</label><input class="input" placeholder="e.g. Rice and Sambar (10 portions)"></div>
+            <div class="input-group"><label class="input-label">Description</label><textarea class="input" placeholder="Any details about the food..." rows="2" style="resize:none;"></textarea></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+              <div class="input-group"><label class="input-label">Quantity (kg)</label><input class="input" placeholder="e.g. 12" type="number"></div>
+              <div class="input-group"><label class="input-label">Expires In (hrs)</label><input class="input" placeholder="e.g. 8" type="number"></div>
+            </div>
+            <div>
+              <div class="input-label" style="margin-bottom:8px;">Category</div>
+              <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                <span class="chip active">Cooked</span>
+                <span class="chip">Raw</span>
+                <span class="chip">Packaged</span>
+                <span class="chip">Bakery</span>
+                <span class="chip">Dairy</span>
+              </div>
+            </div>
+            <div style="background:var(--green-light);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--green);display:flex;align-items:center;gap:6px;">
+              Location auto-detected from your profile
+            </div>
+            <button class="btn btn-primary" style="width:100%;">Publish Listing</button>
+          </div>
+        </div>
+        <div class="card" style="padding:0;overflow:hidden;">
+          <div style="padding:18px 20px;border-bottom:1px solid var(--border-soft);">
+            <div style="font-size:16px;font-weight:700;color:var(--text);">My Listings</div>
+          </div>
+          <table class="tbl">
+            <thead><tr><th>Food Item</th><th>Category</th><th>Qty</th><th>Expires</th><th>Status</th><th></th></tr></thead>
+            <tbody>
+              ${[
+                {title:'Rice & Sambar',cat:'Cooked',qty:'12 kg',exp:'3h',st:'Active',sc:'green'},
+                {title:'Biryani',cat:'Cooked',qty:'25 kg',exp:'2h',st:'Claimed',sc:'amber'},
+                {title:'Bread & Rolls',cat:'Bakery',qty:'5 kg',exp:'5h',st:'Active',sc:'green'},
+                {title:'Parle-G Biscuits',cat:'Packaged',qty:'8 kg',exp:'1d',st:'Active',sc:'green'},
+                {title:'Milk Packets',cat:'Dairy',qty:'15 kg',exp:'14h',st:'Picked Up',sc:'blue'},
+              ].map(r=>`
+                <tr>
+                  <td style="font-weight:500;">${r.title}</td>
+                  <td><span class="badge badge-gray">${r.cat}</span></td>
+                  <td>${r.qty}</td>
+                  <td style="color:var(--amber);">${r.exp}</td>
+                  <td><span class="badge badge-${r.sc==='green'?'green':r.sc==='amber'?'amber':'blue'}">${r.st}</span></td>
+                  <td><button class="btn btn-ghost btn-sm">Edit</button></td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 5: FORECAST CHART -->
+  <div class="screen" id="s4">
+    <div class="navbar">
+      <div class="navbar-brand"><span style="font-size:18px;">🌿</span>FoodBridge</div>
+      <div class="nav-link">Map</div>
+      <div class="nav-link">Listings</div>
+      <div class="nav-link active">Forecast</div>
+      <div class="nav-link">My Claims</div>
+      <div class="nav-right"><div class="avatar">T</div></div>
+    </div>
+    <div style="padding:28px;max-width:1100px;margin:0 auto;">
+      <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:4px;">
+        <div style="font-size:22px;font-weight:700;color:var(--text);">Demand Forecast</div>
+        <div style="font-size:12px;color:var(--text-hint);">ML model · refreshes hourly</div>
+      </div>
+      <div style="font-size:14px;color:var(--text-muted);margin-bottom:24px;">Predicted food surplus availability for the next 12 hours near Chennai.</div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:24px;">
+        ${[
+          {cat:'Cooked',kg:'38',color:'var(--green)'},
+          {cat:'Bakery',kg:'12',color:'#F4A261'},
+          {cat:'Raw',kg:'22',color:'#10B981'},
+          {cat:'Packaged',kg:'18',color:'#6366F1'},
+          {cat:'Dairy',kg:'9',color:'#0EA5E9'},
+        ].map(c=>`
+          <div class="stat-card" style="border-top:3px solid ${c.color};">
+            <div style="font-size:20px;font-weight:700;color:${c.color};margin-bottom:2px;">${c.kg} kg</div>
+            <div style="font-size:12px;font-weight:500;color:#374151;">${c.cat}</div>
+            <div style="font-size:11px;color:var(--text-hint);margin-top:2px;">expected next 6h</div>
+          </div>
+        `).join('')}
+      </div>
+      <div style="display:grid;grid-template-columns:2fr 1fr;gap:16px;">
+        <div class="card">
+          <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:16px;">Surplus by Hour — Next 12h</div>
+          <div id="forecast-chart" style="display:flex;align-items:flex-end;gap:4px;height:180px;padding-bottom:8px;border-bottom:1px solid var(--border-soft);"></div>
+          <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:12px;">
+            ${[
+              {label:'Cooked',color:'var(--green)'},
+              {label:'Bakery',color:'#F4A261'},
+              {label:'Raw',color:'#10B981'},
+              {label:'Dairy',color:'#0EA5E9'},
+              {label:'Packaged',color:'#6366F1'},
+            ].map(l=>`<div style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text-muted);"><div style="width:10px;height:10px;border-radius:2px;background:${l.color};"></div>${l.label}</div>`).join('')}
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div class="card">
+            <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px;">Peak Surplus Times</div>
+            ${[
+              {time:'7:00 AM',desc:'Breakfast surplus',cat:'Cooked',color:'var(--green)'},
+              {time:'1:00 PM',desc:'Lunch overflow',cat:'Cooked',color:'var(--green)'},
+              {time:'8:00 AM',desc:'Bakery end-of-day',cat:'Bakery',color:'#F4A261'},
+              {time:'7:00 PM',desc:'Dinner surplus',cat:'Cooked',color:'var(--green)'},
+            ].map(p=>`
+              <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-soft);">
+                <div style="background:var(--bg);border-radius:8px;padding:6px 10px;font-size:12px;font-weight:600;color:var(--text);white-space:nowrap;">${p.time}</div>
+                <div>
+                  <div style="font-size:12px;font-weight:500;color:var(--text);">${p.desc}</div>
+                  <span class="badge" style="background:var(--green-light);color:var(--green);font-size:10px;">${p.cat}</span>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+          <div class="card" style="background:var(--green);border:none;">
+            <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:4px;">Total expected today</div>
+            <div style="font-size:32px;font-weight:700;color:#fff;">99 kg</div>
+            <div style="font-size:12px;color:#A7F3D0;margin-top:4px;">across all 5 categories</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function showScreen(i) {
+    document.querySelectorAll('.screen').forEach((s,j)=>{s.classList.toggle('active',i===j);});
+    document.querySelectorAll('.tab').forEach((t,j)=>{t.classList.toggle('active',i===j);});
+    if(i===4) buildChart();
+  }
+
+  function toggleAuthTab(i) {
+    const sd = document.getElementById('tab-signin');
+    const rd = document.getElementById('tab-register');
+    const rs = document.getElementById('role-section');
+    if(i===0){
+      sd.style.cssText='padding:8px 24px;border-radius:20px;background:var(--green);color:#fff;font-size:13px;font-weight:600;cursor:pointer;';
+      rd.style.cssText='padding:8px 24px;border-radius:20px;font-size:13px;font-weight:500;color:var(--text-muted);cursor:pointer;';
+    } else {
+      rd.style.cssText='padding:8px 24px;border-radius:20px;background:var(--green);color:#fff;font-size:13px;font-weight:600;cursor:pointer;';
+      sd.style.cssText='padding:8px 24px;border-radius:20px;font-size:13px;font-weight:500;color:var(--text-muted);cursor:pointer;';
+    }
+  }
+
+  function selectRole(r) {
+    const d = document.getElementById('role-donor');
+    const rc = document.getElementById('role-recipient');
+    if(r==='donor'){
+      d.style.cssText='flex:1;padding:10px;border-radius:10px;border:1.5px solid var(--green);background:var(--green-light);text-align:center;font-size:13px;font-weight:600;color:var(--green);cursor:pointer;';
+      rc.style.cssText='flex:1;padding:10px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface-alt);text-align:center;font-size:13px;color:var(--text-muted);cursor:pointer;';
+    } else {
+      rc.style.cssText='flex:1;padding:10px;border-radius:10px;border:1.5px solid var(--green);background:var(--green-light);text-align:center;font-size:13px;font-weight:600;color:var(--green);cursor:pointer;';
+      d.style.cssText='flex:1;padding:10px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface-alt);text-align:center;font-size:13px;color:var(--text-muted);cursor:pointer;';
+    }
+  }
+
+  function buildChart() {
+    const el = document.getElementById('forecast-chart');
+    if(!el || el.children.length > 0) return;
+    const hours = ['7AM','8AM','9AM','10AM','11AM','12PM','1PM','2PM','3PM','4PM','5PM','6PM'];
+    const data = [28,18,12,10,14,20,38,22,16,14,18,32];
+    const max = Math.max(...data);
+    hours.forEach((h,i)=>{
+      const col = document.createElement('div');
+      col.style.cssText='display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;height:100%;justify-content:flex-end;';
+      const val = document.createElement('div');
+      val.style.cssText='font-size:9px;color:var(--text-hint);';
+      val.textContent=data[i];
+      const bar = document.createElement('div');
+      const pct = Math.round(data[i]/max*100);
+      const barColors = ['var(--green)','#F4A261','var(--green)','#10B981','#6366F1','var(--green)','var(--green)','#10B981','var(--green)','#F4A261','var(--green)','var(--green)'];
+      bar.style.cssText=`width:100%;border-radius:4px 4px 0 0;background:${barColors[i]};height:${pct}%;opacity:${i===6?1:0.6};`;
+      const lbl = document.createElement('div');
+      lbl.style.cssText='font-size:9px;color:var(--text-hint);white-space:nowrap;';
+      lbl.textContent=h;
+      col.appendChild(val); col.appendChild(bar); col.appendChild(lbl);
+      el.appendChild(col);
+    });
+  }
+</script>

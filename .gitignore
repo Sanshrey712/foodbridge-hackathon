@@ -1,0 +1,49 @@
+# Environment variables - NEVER commit these
+.env
+.env.local
+.env.*.local
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+.venv/
+venv/
+env/
+pip-log.txt
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Vite / React build output
+frontend/dist/
+frontend/.vite/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# IDEs
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+.vscode/
+
+# Local SQLite (dev only)
+backend/foodbridge.db
+*.db
+
+# ML model binaries are committed intentionally so Render doesn't retrain on cold start
+# ml/models/*.pkl  <-- keep these tracked
