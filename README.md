@@ -19,6 +19,10 @@
   <sub>Real-time surplus food redistribution powered by ML matching, demand forecasting, and voice AI</sub>
 </p>
 
+<p align="center">
+  <b>🎉 Live Demo: <a href="https://foodbridge-hackathon.vercel.app/">https://foodbridge-hackathon.vercel.app/</a> 🎉</b>
+</p>
+
 ---
 
 ## 🎯 Problem
