@@ -44,6 +44,7 @@ function AnimatedRoutes() {
         {/* Public */}
         <Route path="/" element={<DefaultRedirect />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/auth/callback" element={<LoginPage />} />
 
         {/* Auth-required */}
         <Route path="/map" element={

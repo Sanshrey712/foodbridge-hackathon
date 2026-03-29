@@ -6,7 +6,7 @@ export function ThemeProvider({ children }) {
   const [isDark, setIsDark] = useState(() => {
     const stored = localStorage.getItem('fb_theme')
     if (stored) return stored === 'dark'
-    return window.matchMedia('(prefers-color-scheme: dark)').matches
+    return false  // default to light theme
   })
 
   useEffect(() => {

@@ -113,7 +113,7 @@ export default function CO2Calculator({ initialKg = 10, compact = false }) {
         }}>
             {/* Header */}
             <div style={{
-                background: 'linear-gradient(135deg, #0a2e1a, #1B4332)',
+                background: 'linear-gradient(135deg, var(--primary-dark), var(--primary))',
                 padding: '20px 24px',
                 display: 'flex',
                 alignItems: 'center',
@@ -208,13 +208,14 @@ export default function CO2Calculator({ initialKg = 10, compact = false }) {
 
                 {/* Water footprint highlight */}
                 <div style={{
-                    background: 'linear-gradient(90deg, #E0F2FE, #EDE9FE)',
+                    background: 'var(--blue-light, #E0F2FE)',
                     borderRadius: '12px',
                     padding: '12px 16px',
                     display: 'flex',
                     alignItems: 'center',
                     gap: '12px',
                     marginBottom: '16px',
+                    border: '1px solid rgba(14, 165, 233, 0.2)',
                 }}>
                     <span style={{ fontSize: '24px' }}>💧</span>
                     <div>

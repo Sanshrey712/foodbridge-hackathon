@@ -34,7 +34,7 @@ function GlowCard({ icon, value, unit, label, color, delay = 0, decimals = 0 }) 
 
   return (
     <div style={{
-      background: 'rgba(255,255,255,0.04)',
+      background: 'var(--surface-alt)',
       border: `1px solid ${color}33`,
       borderRadius: '20px',
       padding: '28px 20px',
@@ -64,7 +64,7 @@ function GlowCard({ icon, value, unit, label, color, delay = 0, decimals = 0 }) 
         <AnimatedCounter target={value} duration={2000 + delay} decimals={decimals} />
         <span style={{ fontSize: '16px', fontWeight: 500, opacity: 0.7, marginLeft: '4px' }}>{unit}</span>
       </div>
-      <div style={{ fontSize: '12px', color: '#94A3B8', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1px', position: 'relative' }}>
+      <div style={{ fontSize: '12px', color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1px', position: 'relative' }}>
         {label}
       </div>
     </div>
@@ -83,10 +83,11 @@ export default function MissionControl({ stats }) {
 
   return (
     <div style={{
-      background: 'linear-gradient(160deg, #0a1628 0%, #0d2818 50%, #0a1628 100%)',
+      background: 'var(--surface)',
+      border: '1px solid var(--border)',
       borderRadius: '24px',
       padding: '32px',
-      color: '#fff',
+      color: 'var(--text)',
       position: 'relative',
       overflow: 'hidden',
     }}>
@@ -94,10 +95,11 @@ export default function MissionControl({ stats }) {
       <div style={{
         position: 'absolute', inset: 0,
         backgroundImage: `
-          linear-gradient(rgba(45,106,79,0.05) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(45,106,79,0.05) 1px, transparent 1px)
+          linear-gradient(var(--border) 1px, transparent 1px),
+          linear-gradient(90deg, var(--border) 1px, transparent 1px)
         `,
         backgroundSize: '40px 40px',
+        opacity: 0.4,
         pointerEvents: 'none',
       }} />
       
@@ -140,7 +142,7 @@ export default function MissionControl({ stats }) {
         }}>
           FoodBridge Impact Dashboard
         </h2>
-        <p style={{ fontSize: '13px', color: '#64748B', margin: 0 }}>
+        <p style={{ fontSize: '13px', color: 'var(--text-muted)', margin: 0 }}>
           Real-time environmental and social impact metrics for Chennai
         </p>
       </div>
@@ -167,8 +169,8 @@ export default function MissionControl({ stats }) {
           { icon: '✅', val: claims, label: 'Claims Completed', color: '#8B5CF6' },
         ].map((s, i) => (
           <div key={s.label} style={{
-            background: 'rgba(255,255,255,0.03)',
-            border: '1px solid rgba(255,255,255,0.06)',
+            background: 'var(--surface-alt)',
+            border: '1px solid var(--border)',
             borderRadius: '14px', padding: '16px', textAlign: 'center',
             opacity: 0,
             animation: `fadeSlideIn 0.5s ease ${0.8 + i * 0.15}s forwards`,
@@ -177,20 +179,20 @@ export default function MissionControl({ stats }) {
             <div style={{ fontFamily: 'var(--font-display)', fontSize: '22px', fontWeight: 700, color: s.color, margin: '4px 0 2px' }}>
               <AnimatedCounter target={s.val} duration={2500} />
             </div>
-            <div style={{ fontSize: '10px', color: '#64748B', fontWeight: 600 }}>{s.label}</div>
+            <div style={{ fontSize: '10px', color: 'var(--text-hint)', fontWeight: 600 }}>{s.label}</div>
           </div>
         ))}
       </div>
 
       {/* Methodology footer */}
       <div style={{
-        background: 'rgba(255,255,255,0.03)',
-        border: '1px solid rgba(255,255,255,0.06)',
+        background: 'var(--surface-alt)',
+        border: '1px solid var(--border)',
         borderRadius: '12px', padding: '14px 18px',
-        fontSize: '10px', color: '#475569', lineHeight: 1.8,
+        fontSize: '10px', color: 'var(--text-muted)', lineHeight: 1.8,
         position: 'relative',
       }}>
-        <div style={{ fontWeight: 700, color: '#94A3B8', marginBottom: '4px' }}>📊 Data Sources</div>
+        <div style={{ fontWeight: 700, color: 'var(--text-muted)', marginBottom: '4px' }}>📊 Data Sources</div>
         <div>• CO₂: IPCC AR6 food waste emission factors · Tree absorption: 22g CO₂/day average</div>
         <div>• Water: FAO virtual water footprint database · Meals: 250g standard Indian portion</div>
         <div>• All metrics update in real-time from FoodBridge operational data — Chennai region</div>

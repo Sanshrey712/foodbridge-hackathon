@@ -1,10 +1,10 @@
 import axios from 'axios'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8001'
-const ML_URL  = import.meta.env.VITE_ML_URL  || 'http://localhost:8000'
+const ML_URL = import.meta.env.VITE_ML_URL || 'http://localhost:8000'
 
 export const api = axios.create({ baseURL: API_URL })
-export const ml  = axios.create({ baseURL: ML_URL  })
+export const ml = axios.create({ baseURL: ML_URL })
 
 // Inject token on every backend request
 api.interceptors.request.use(cfg => {
@@ -15,9 +15,10 @@ api.interceptors.request.use(cfg => {
 
 // ── Auth ──────────────────────────────────────────────────────────
 export const authAPI = {
-  register: (data)  => api.post('/auth/register', data),
-  login:    (data)  => api.post('/auth/login', data),
-  me:       ()      => api.get('/auth/me'),
+  register: (data) => api.post('/auth/register', data),
+  login: (data) => api.post('/auth/login', data),
+  me: () => api.get('/auth/me'),
+  loginWithGoogle: (data) => api.post('/auth/google', data),
 }
 
 // ── Listings ──────────────────────────────────────────────────────
@@ -27,19 +28,19 @@ export const listingsAPI = {
   create: (data) => api.post('/listings', data),
   update: (id, data) => api.patch(`/listings/${id}`, data),
   delete: (id) => api.delete(`/listings/${id}`),
-  get:    (id) => api.get(`/listings/${id}`),
+  get: (id) => api.get(`/listings/${id}`),
 }
 
 // ── Claims ────────────────────────────────────────────────────────
 export const claimsAPI = {
-  create:  (listing_id) => api.post('/claims', { listing_id }),
-  mine:    ()           => api.get('/claims/mine'),
-  pickup:  (id)         => api.patch(`/claims/${id}/pickup`),
+  create: (listing_id) => api.post('/claims', { listing_id }),
+  mine: () => api.get('/claims/mine'),
+  pickup: (id) => api.patch(`/claims/${id}/pickup`),
 }
 
 // ── Donors ────────────────────────────────────────────────────────
 export const donorsAPI = {
-  me:    () => api.get('/donors/me'),
+  me: () => api.get('/donors/me'),
   stats: () => api.get('/donors/stats'),
 }
 
